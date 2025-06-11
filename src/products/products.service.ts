@@ -56,8 +56,30 @@ export class ProductsService {
           ? productData.price
           : product.price,
     };
+    this.product[index] = { ...product, ...updatedProduct };
+    return updatedProduct;
+  }
+
+  partialUpdate(
+    prodId: string,
+    productData: { title?: string; description?: string; price?: number },
+  ) {
+    const [product, index] = this.findProduct(prodId);
+    const updatedProduct = {
+      ...product,
+      ...productData,
+    };
     this.product[index] = updatedProduct;
     return updatedProduct;
+  }
+
+  deleteProduct(prodId: string) {
+    const [product, index] = this.findProduct(prodId);
+    if (!product) {
+      throw new NotFoundException('Could not find product.');
+    }
+    this.product.splice(index, 1);
+    return product;
   }
 
   private findProduct(prodId: string): [Product, number] {
